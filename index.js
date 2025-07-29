@@ -19,7 +19,11 @@ app.get('/', (req, res) => {
 
 const io = socketIo(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://client-fky8gkon9-masas-projects-e538d05a.vercel.app",
+      process.env.CLIENT_URL
+    ].filter(Boolean),
     methods: ["GET", "POST"]
   }
 });
@@ -50,10 +54,12 @@ io.on('connection', (socket) => {
 
   socket.on('draw', (data) => {
     const { roomId, drawData } = data;
+    console.log(`Draw event received for room ${roomId}:`, drawData);
     
     if (rooms.has(roomId)) {
       rooms.get(roomId).canvas.push(drawData);
       socket.to(roomId).emit('draw', drawData);
+      console.log(`Draw data broadcasted to room ${roomId}`);
     }
   });
 
