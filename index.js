@@ -6,7 +6,14 @@ const cors = require('cors');
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://client-fky8gkon9-masas-projects-e538d05a.vercel.app",
+    process.env.CLIENT_URL
+  ].filter(Boolean),
+  credentials: true
+}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -19,12 +26,9 @@ app.get('/', (req, res) => {
 
 const io = socketIo(server, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      "https://client-fky8gkon9-masas-projects-e538d05a.vercel.app",
-      process.env.CLIENT_URL
-    ].filter(Boolean),
-    methods: ["GET", "POST"]
+    origin: "*",
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
