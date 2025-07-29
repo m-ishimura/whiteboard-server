@@ -9,6 +9,14 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Whiteboard server is running!',
+    status: 'ok',
+    timestamp: new Date().toISOString()
+  });
+});
+
 const io = socketIo(server, {
   cors: {
     origin: process.env.CLIENT_URL || "http://localhost:3000",
